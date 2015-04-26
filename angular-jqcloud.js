@@ -41,7 +41,7 @@ angular.module('angular-jqcloud', []).directive('jqcloud', ['$parse', function($
           var words = [];
           $.extend(words,$scope.words);
           $elem.jQCloud('update', words);
-          if($scope.onWordSelected) $elem.find("span").bind("click", function(a, el) {
+          if($elem.attr("onWordSelected")) $elem.find("span").bind("click", function(a, el) {
               a.preventDefault();
               $scope.onWordSelected({
                   selected: a.target.text
