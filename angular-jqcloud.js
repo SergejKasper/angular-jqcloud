@@ -20,7 +20,9 @@ angular.module('angular-jqcloud', []).directive('jqcloud', ['$parse', function($
     restrict: 'E',
     template: '<div></div>',
     replace: true,
+    require: '?ngModel',
     scope: {
+      onWordSelected: '&',
       words: '=words'
     },
     link: function($scope, $elem, $attr) {
@@ -33,18 +35,23 @@ angular.module('angular-jqcloud', []).directive('jqcloud', ['$parse', function($
         }
       }
       
-      jQuery($elem).jQCloud($scope.words, options);
-      
+      $elem.jQCloud($scope.words, options);
       $scope.$watchCollection('words', function() {
         $scope.$evalAsync(function() {
           var words = [];
           $.extend(words,$scope.words);
-          jQuery($elem).jQCloud('update', words);
+          $elem.jQCloud('update', words);
+          if($scope.onWordSelected) $elem.find("span").bind("click", function(a, el) {
+              a.preventDefault();
+              $scope.onWordSelected({
+                  selected: a.target.text
+              });
+          });
         });
       });
     
       $elem.bind('$destroy', function() {
-        jQuery($elem).jQCloud('destroy');
+        $elem.jQCloud('destroy');
       });
     }
   };
